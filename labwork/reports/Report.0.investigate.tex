@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{labwork 0}
+\author{Pham Phan Bach }
+
+
+\begin{document}
+
+\maketitle
+
+\section{How to compile the labwork project}
+    mkdir build\\
+    cd build\\
+    cmake ..\\
+    make -j\\
+
+\section{What is needed to compile}
+    OS: GNU/Linux or macOS. Windows is not supported by the lecturer, as usual :-)
+    CUDA SDK 7+.\\
+    Compiler: nvcc (bundled with CUDA SDK) and gcc 4.8+ (for C++11 standard support).\\
+    libjpeg to encode/decode JPEG files.\\
+
+\section{Command and output for compilation}
+    To run your labwork: ./labwork\\
+    Output:
+        student10@ictserver5:/storage/student10/advancedhpc2019/labwork/build$ ./labwork \\
+        USTH ICT Master 2018, Advanced Programming for HPC. \\
+        Usage: labwork <lwNum> <inputImage> \\
+        lwNum        labwork number \\
+        inputImage   the input file name, in JPEG format    \\
+
+\end{document}
