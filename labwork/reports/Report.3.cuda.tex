@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{labwork 3}
+\author{Pham Phan Bach }
+
+
+\begin{document}
+
+\maketitle
+    
+
+\section{How i implement:}
+\begin{verbatim}
+    
+void Labwork::labwork3_GPU() {
+    // Calculate number of pixels
+    int pixelCount = inputImage->width * inputImage->height;
+
+    // Define blocksize & numblock
+    int blockSize = 64;
+    int numBlock = pixelCount / blockSize;
+
+    //Allocate output memory
+    outputImage = static_cast<char *>(malloc(pixelCount * 3));
+
+    // Allocate CUDA memory    
+    uchar3 *devImage;
+    uchar3 *devOutput;
+    cudaMalloc(&devImage, pixelCount *sizeof(uchar3));
+    cudaMalloc(&devOutput, pixelCount *sizeof(uchar3));
+    
+    // Copy CUDA Memory from CPU to GPU
+    cudaMemcpy(devImage, inputImage->buffer,pixelCount *sizeof(uchar3),
+cudaMemcpyHostToDevice);
+    
+    // Processing
+    grayscale<<<numBlock, blockSize>>>(devInput, devOutput);
+
+    // Copy CUDA Memory from GPU to CPU
+    cudaMemcpy(outputImage, devOutput->buffer,pixelCount *sizeof(uchar3),
+cudaMemcpyHostToDevice);
+
+
+    // Cleaning
+    cudaFree(devImage);
+    cudaFree(devOutput);
+}
+
+\end{verbatim}{}
+
+\end{document}
