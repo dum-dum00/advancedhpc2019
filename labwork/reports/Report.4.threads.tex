@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+
+
+
+\title{labwork 4}
+\author{Pham Phan Bach }
+
+
+\begin{document}
+
+\maketitle
+    
+
+\section{Improvement explaination}
+\begin{verbatim}
+__global__ void grayscale2D(uchar3* input, uchar3* output, int width, 
+int height){
+	int tid_x = threadIdx.x + blockIdx.x * blockDim.x;
+	int tid_y = threadIdx.y + blockIdx.y * blockDim.y;
+	if(tid_x > width || tid_y > height) return;
+	int tid = (int)(tid_x + tid_y * width);
+	output[tid].x = (input[tid].x + input[tid].y + input[tid].z) / 3;
+	output[tid].z = output[tid].y = output[tid].x;
+}
+
+void Labwork::labwork4_GPU() {
+	int pixelCount = inputImage->width * inputImage->height;
+	outputImage = static_cast<char*>(malloc(pixelCount * 3));
+	uchar3* devImage;
+    uchar3*	devOutput;
+	cudaMalloc(&devImage, pixelCount * sizeof(uchar3));
+	cudaMalloc(&devOutput, pixelCount * sizeof(uchar3));
+	cudaMemcpy(devImage, inputImage->buffer, pixelCount * sizeof(uchar3),
+	cudaMemcpyHostToDevice);
+
+
+	int b_x = 32;
+	int b_y = 32;
+	int d_x = (int)(inputImage->width + b_x - 1) / b_x;
+	int d_y = (int)(inputImage->height + b_y - 1) / b_y;
+	
+	dim3 blockSize = dim3(b_x, b_y);
+	dim3 gridSize = dim3(d_x, d_y);
+	grayscaleVer<<<gridSize, blockSize>>>(devImage, devOutput, inputImage->width, 
+	inputImage->height);
+	cudaMemcpy(outputImage, devOutput, pixelCount * sizeof(uchar3), 
+	cudaMemcpyDeviceToHost);
+	cudaFree(devImage);
+	cudaFree(devOutput);
+}
+
+
+\end{verbatim}{}
+
+
+\section{Result}
+\begin{verbatim}
+    USTH ICT Master 2018, Advanced Programming for HPC.
+    Warming up...
+    Starting labwork 4
+    labwork 4 ellapsed 273.2ms
+\end{verbatim}{}
+\end{document}
